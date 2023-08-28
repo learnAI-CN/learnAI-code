@@ -1,19 +1,4 @@
-# %load network.py
-
-"""
-network.py
-~~~~~~~~~~
-IT WORKS
-
-A module to implement the stochastic gradient descent learning
-algorithm for a feedforward neural network.  Gradients are calculated
-using backpropagation.  Note that I have focused on making the code
-simple, easily readable, and easily modifiable.  It is not optimized,
-and omits many desirable features.
-"""
-
-#### Libraries
-# Standard library
+# -*- coding: utf-8 -*-
 import random
 
 # Third-party libraries
@@ -24,16 +9,13 @@ import gzip
 class Network(object):
 
     def __init__(self, sizes):
-        """The list ``sizes`` contains the number of neurons in the
-        respective layers of the network.  For example, if the list
-        was [2, 3, 1] then it would be a three-layer network, with the
-        first layer containing 2 neurons, the second layer 3 neurons,
-        and the third layer 1 neuron.  The biases and weights for the
-        network are initialized randomly, using a Gaussian
-        distribution with mean 0, and variance 1.  Note that the first
-        layer is assumed to be an input layer, and by convention we
-        won't set any biases for those neurons, since biases are only
-        ever used in computing the outputs from later layers."""
+        """
+        列表 sizes 包含网络中各层的神经元数量。例如，如果列表是 [2, 3, 1]，
+        则它将是一个三层网络，第一层包含 2 个神经元，第二层包含 3 个神经元，
+        第三层包含 1 个神经元。使用均值为 0，方差为 1 的高斯分布随机初始化
+        网络的偏置和权重。需要注意的是，第一层被认为是输入层，并且按照惯例，
+        我们不会为这些神经元设置任何偏置，因为偏置仅用于计算后续层的输出。
+        """
         self.num_layers = len(sizes)
         self.sizes = sizes
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
@@ -41,21 +23,19 @@ class Network(object):
                         for x, y in zip(sizes[:-1], sizes[1:])]
 
     def feedforward(self, a):
-        """Return the output of the network if ``a`` is input."""
+        """返回神经网络的输出"""
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
-        """Train the neural network using mini-batch stochastic
-        gradient descent.  The ``training_data`` is a list of tuples
-        ``(x, y)`` representing the training inputs and the desired
-        outputs.  The other non-optional parameters are
-        self-explanatory.  If ``test_data`` is provided then the
-        network will be evaluated against the test data after each
-        epoch, and partial progress printed out.  This is useful for
-        tracking progress, but slows things down substantially."""
+        """
+        使用小批量随机梯度下降算法训练神经网络。
+        其中，training_data 是包含元组 (x, y) 的列表，表示训练输入和期望输出。
+        其他非可选参数是不言自明的。如果提供了 test_data，则在每个 epoch 后将
+        对测试数据进行评估，并打印出部分进展情况。这对于跟踪进展非常有用，但会显著减慢速度。
+        """
 
         training_data = list(training_data)
         n = len(training_data)
@@ -139,19 +119,17 @@ class Network(object):
 
 #### Miscellaneous functions
 def sigmoid(z):
-    """The sigmoid function."""
     return 1.0/(1.0+np.exp(-z))
 
 def sigmoid_prime(z):
-    """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
 
 
 def load_data():
     """
     将 MNIST 数据返回为一个元组，包含训练数据、验证数据和测试数据。
-    其中，training_data 作为一个元组返回，包含两个条目。
-    第一个条目包含实际的训练图像，这是一个包含 50,000 个条目的 numpy ndarray。
+    其中，training_data 作为一个元组返回，包含两个条目。第一个条目
+    包含实际的训练图像，这是一个包含 50,000 个条目的 numpy ndarray。
     每个条目又是一个包含 784 个值的 numpy ndarray，表示单个 MNIST 图像中的 28 * 28 = 784 个像素。
     training_data 元组的第二个条目是一个包含 50,000 个条目的 numpy ndarray，
     这些条目仅是元组第一个条目中对应图像的数字值（0...9）。
